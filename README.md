@@ -54,38 +54,55 @@ Since the values are constant, we can just drop them from loading it in the feat
 
 **Geographic Information:**
 
+![country](https://user-images.githubusercontent.com/44206279/48670285-4c452d80-eb3b-11e8-824a-d54d05917d83.png)
+
+![continent](https://user-images.githubusercontent.com/44206279/48670286-4ea78780-eb3b-11e8-957e-b92f5ba92192.png)
+
+![network](https://user-images.githubusercontent.com/44206279/48670508-f2defd80-eb3e-11e8-8b16-39bcc585e945.png)
 
 **Inferences:**
 
 On the continent plot, we can see that America has both higher number of counts as well as highest number of counts where the revenue is non-zero
 Though Asia and Europe has high number of counts, the number of non-zero revenue counts from these continents are comparatively low.
-We can infer the first two points from the sub-continents plot too.
 If the network domain is "unknown.unknown" rather than "(not set)", then the number of counts with non-zero revenue tend to be lower.
 
 **Traffic Source:**
+
+![youtube](https://user-images.githubusercontent.com/44206279/48670541-35a0d580-eb3f-11e8-9740-fa6deeb496c0.png)
 
 **Inferences:**
 
 In the traffic source plot, though Youtube has high number of counts in the dataset, the number of non-zero revenue counts are very less.
 Google plex has a high ratio of non-zero revenue count to total count in the traffic source plot.
-On the traffic source medium, "referral" has more number of non-zero revenue count compared to "organic" medium.
 
 **Device Information:**
 
+![browser](https://user-images.githubusercontent.com/44206279/48670288-536c3b80-eb3b-11e8-9635-5b38aab219f9.png)
+
+![desktop](https://user-images.githubusercontent.com/44206279/48670290-55ce9580-eb3b-11e8-883a-6d9d9b3c2fdc.png)
+
+![os](https://user-images.githubusercontent.com/44206279/48670291-56ffc280-eb3b-11e8-8fb0-1889b179a05c.png)
+
 **Inferences:**
 
-Device browser distribution looks similar on both the count and count of non-zero revenue plots
-On the device category front, desktop seem to have higher percentage of non-zero revenue counts compared to mobile devices.
-In device operating system, though the number of counts is more from windows, the number of counts where revenue is not zero is more for Macintosh.
-Chrome OS also has higher percentage of non-zero revenue counts
-On the mobile OS side, iOS has more percentage of non-zero revenue counts compared to Android
+- Device browser distribution looks similar on both the count and count of non-zero revenue plots
+- On the device category front, desktop seem to have higher percentage of non-zero revenue counts compared to mobile devices.
+- In device operating system, though the number of counts is more from windows, the number of counts where revenue is not zero is more for Macintosh.
+- Chrome OS also has higher percentage of non-zero revenue counts
+- On the mobile OS side, iOS has more percentage of non-zero revenue counts compared to Android
 
 **Date Exploration:**
 
+![monday](https://user-images.githubusercontent.com/44206279/48670292-58c98600-eb3b-11e8-9452-38106091c362.png)
+
+![month](https://user-images.githubusercontent.com/44206279/48670294-5ebf6700-eb3b-11e8-9933-acbb032b8520.png)
+
+![date](https://user-images.githubusercontent.com/44206279/48670295-61ba5780-eb3b-11e8-861d-0c353fe95621.png)
+
 **Inferences:**
 
-We have data from 1 Aug, 2016 to 31 July, 2017 in our training dataset
-In Nov 2016, though there is an increase in the count of visitors, there is no increase in non-zero revenue counts during that time period (relative to the mean).
+We have data from Aug 1st 2016 to April 30th 2018 in our training dataset.<br>
+- More customers have visited the store during nov to dec
 
 
 
