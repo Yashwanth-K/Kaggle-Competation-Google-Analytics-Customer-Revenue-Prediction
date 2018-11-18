@@ -122,23 +122,23 @@ numerical_cols
 
 Find the missing values:
 
-```train_df[numerical_cols].isnull().sum()
-```
+```train_df[numerical_cols].isnull().sum()```
 
-columns             |number of null values
------------------|------------------
-visitNumber                 |      0
-totals.transactionRevenue    |     0
-weekday                       |    0
-day                            |   0
-month|                             0
-visitHour          |               0
-totals.bounces      |         836759
-totals.hits          |             0
-totals.newVisits      |       400907
-totals.pageviews       |         239
+|columns             |number of null values|
+|-----------------|------------------|
+|visitNumber                 |      0|
+|totals.transactionRevenue    |     0|
+|weekday                       |    0|
+|day                            |   0|
+|month|                             0|
+|visitHour          |               0|
+|totals.bounces      |         836759|
+|totals.hits          |             0|
+|totals.newVisits      |       400907|
+|totals.pageviews       |         239|
 
 Fill nan values with specific values to get better results
+
 ```
 train_df['totals.bounces'] = train_df['totals.bounces'].fillna(0)
 test_df['totals.bounces'] = test_df['totals.bounces'].fillna(0)
