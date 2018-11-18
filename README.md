@@ -137,7 +137,7 @@ Find the missing values:
 |totals.newVisits      |       400907|
 |totals.pageviews       |         239|
 
-Fill nan values with specific values to get better results
+Fill nan with specific values to get better results
 
 ```
 train_df['totals.bounces'] = train_df['totals.bounces'].fillna(0)
