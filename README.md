@@ -124,6 +124,7 @@ Find the missing values:
 
 ```train_df[numerical_cols].isnull().sum()
 ```
+
 columns             |number of null values
 -----------------|------------------
 visitNumber                 |      0
