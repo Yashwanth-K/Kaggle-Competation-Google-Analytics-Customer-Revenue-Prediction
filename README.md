@@ -7,9 +7,9 @@ In this kaggle competition,we are challenged to analyze a Google Merchandise Sto
 
 **File Descriptions**
 
-train.csv - the training set - contains the same data as the rstudio_train_set.
-test.csv - the test set - contains the same data as the rstudio_test_set.
-sampleSubmission.csv - a sample submission file in the correct format. Contains all fullVisitorIds in test.csv.
+- train.csv - the training set - contains the same data as the rstudio_train_set.
+- test.csv - the test set - contains the same data as the rstudio_test_set.
+- sampleSubmission.csv - a sample submission file in the correct format. Contains all fullVisitorIds in test.csv.
 
 **Data Mining**
 
@@ -26,7 +26,7 @@ def load_df(csv_path='../input/train.csv'):
 ```
 **Target Variable Exploration:**
 
-Since we are predicting the natural log of sum of all transactions of the user, let us sum up the transaction revenue at user level and take a log and then do a scatter plot.
+Since we are predicting the natural log of sum of all transactions of the user, sum up the transaction revenue at user level and take a log and then do a scatter plot.
 
 ![80](https://user-images.githubusercontent.com/44206279/48670296-65e67500-eb3b-11e8-89f7-6eff04cdf197.png)
 
@@ -62,9 +62,9 @@ Since the values are constant, we can just drop them from loading it in the feat
 
 **Inferences:**
 
-On the continent plot, we can see that America has both higher number of counts as well as highest number of counts where the revenue is non-zero
-Though Asia and Europe has high number of counts, the number of non-zero revenue counts from these continents are comparatively low.
-If the network domain is "unknown.unknown" rather than "(not set)", then the number of counts with non-zero revenue tend to be lower.
+- On the continent plot, we can see that America has both higher number of counts as well as highest number of counts where the revenue is non-zero
+- Though Asia and Europe has high number of counts, the number of non-zero revenue counts from these continents are comparatively low.
+- If the network domain is "unknown.unknown" rather than "(not set)", then the number of counts with non-zero revenue tend to be lower.
 
 **Traffic Source:**
 
@@ -73,7 +73,7 @@ If the network domain is "unknown.unknown" rather than "(not set)", then the num
 **Inferences:**
 
 In the traffic source plot, though Youtube has high number of counts in the dataset, the number of non-zero revenue counts are very less.
-Google plex has a high ratio of non-zero revenue count to total count in the traffic source plot.
+Google has a high ratio of non-zero revenue count to total count in the traffic source plot.
 
 **Device Information:**
 
@@ -102,13 +102,85 @@ Google plex has a high ratio of non-zero revenue count to total count in the tra
 **Inferences:**
 
 We have data from Aug 1st 2016 to April 30th 2018 in our training dataset.<br>
-- More customers have visited the store during nov to dec
+- More customers have visited the store during nov to dec 2017
 
+**Seperate categorical columns and numerical columns from train set**
 
+```categorical_cols = list()
+for i in train_df.columns:
+    if train_df[i].dtype=='object' and (not(i.startswith('total'))):
+        categorical_cols.append(i)
+categorical_cols
 
-Now let us compute the evaluation metric on the validation data as mentioned in this new discussion thread. So we need to do a sum for all the transactions of the user and then do a log transformation on top. Let us also make the values less than 0 to 0 as transaction revenue can only be 0 or more.
+numerical_cols = list()
+for i in train_df.columns:
+    if train_df[i].dtype not in ['object', 'bool']:
+        numerical_cols.append(i)
+numerical_cols
+```
+**Find the missing values in the columns**
 
+Find the missing values:
 
-So we are getting a validation score of 1.70 using this method against the public leaderboard score of 1.44. So please be cautious while dealing with this.
+```train_df[numerical_cols].isnull().sum()
+```
+columns             |number of null values
+-----------------|------------------
+visitNumber                 |      0
+totals.transactionRevenue    |     0
+weekday                       |    0
+day                            |   0
+month|                             0
+visitHour          |               0
+totals.bounces      |         836759
+totals.hits          |             0
+totals.newVisits      |       400907
+totals.pageviews       |         239
+
+Fill nan values with specific values to get better results
+```
+train_df['totals.bounces'] = train_df['totals.bounces'].fillna(0)
+test_df['totals.bounces'] = test_df['totals.bounces'].fillna(0)
+
+train_df['totals.newVisits'] = train_df['totals.newVisits'].fillna(0)
+test_df['totals.newVisits'] = test_df['totals.newVisits'].fillna(0)
+
+train_df['totals.pageviews'] = train_df['totals.pageviews'].fillna(1)
+test_df['totals.pageviews'] = test_df['totals.pageviews'].fillna(1)
+```
+Create development and validation splits based on time to build the model.
+```
+from datetime import date
+
+val_df = train_new[train_new['date']>='2018-3-30']
+val_X = val_df[categorical_cols+numerical_cols]
+val_Y = val_df['totals.transactionRevenue']
+
+dev_df = train_new[train_new['date']<'2018-3-30']
+train_X = dev_df[categorical_cols+numerical_cols]
+train_Y = dev_df['totals.transactionRevenue']
+```
+**Run light gbm model to train the model**
+
+```
+lgtrain = lgb.Dataset(train_X, label=train_Y,categorical_feature=categorical_cols)
+lgvalid = lgb.Dataset(val_X, label=val_Y,categorical_feature=categorical_cols)
+lgbmodel = lgb.train(params, lgtrain, 2000, valid_sets=[lgvalid], early_stopping_rounds=100, verbose_eval=100)
+```
+
+Compute the evaluation metric on the validation data. Do a sum for all the transactions of the user and then do a log transformation on top.Make the values less than 0 to 0 as transaction revenue can only be 0 or more.
+```
+print(np.sqrt(metrics.mean_squared_error(np.log1p(val_pred_df["transactionRevenue"].values), np.log1p(val_pred_df["PredictedRevenue"].values))))
+```
+**Submit the file**
+```
+submit = pd.DataFrame({"fullVisitorId":id})
+pred_test[pred_test<0] = 0
+submit["PredictedLogRevenue"] = np.expm1(pred_test)
+submit = submit.groupby("fullVisitorId")["PredictedLogRevenue"].sum().reset_index()
+submit.columns = ["fullVisitorId", "PredictedLogRevenue"]
+submit["PredictedLogRevenue"] = np.log1p(submit["PredictedLogRevenue"])
+submit.to_csv("D:\\Sub_file.csv", index=False)
+```
 
 
