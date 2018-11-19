@@ -7,6 +7,7 @@ NumPy<br>
 Pandas<br>
 matplotlib<br>
 scikit-learn<br>
+seaborn<br>
 You will also need to have software installed to run and execute a Jupyter Notebook
 
 If you do not have Python installed yet, it is highly recommended that you install the Anaconda distribution of Python, which already has the above packages and more included.
@@ -67,26 +68,24 @@ I have taken the data from Aug 1st 2016 to April 30th 2018 as the training set v
 ```
 **Training**<br>
 Run light gbm model to train the model
-<span style="color: green"> Some green text </span>
+
+<font color=green>Light GBM is a gradient boosting framework that uses tree based learning algorithm.</font>
 ```
-LGBM_train = lgb.Dataset(train_X, label=train_Y,categorical_feature=category_cols)
-LGBM_valid = lgb.Dataset(val_X, label=val_Y,categorical_feature=category_cols)
-LGBM_model = lgb.train(params, LGBM_train, 2000, valid_sets=[LGBM_valid], early_stopping_rounds=100, verbose_eval=100)
+Light GBM grows tree vertically while other algorithm grows trees horizontally meaning that Light GBM grows tree leaf-wise while other algorithm grows level-wise. It will choose the leaf with max delta loss to grow. When growing the same leaf, Leaf-wise algorithm can reduce more loss than a level-wise algorithm.
 ```
+Light GBM is prefixed as ‘Light’ because of its high speed. Light GBM can handle the large size of data and takes lower memory to run.<br> Another reason of why Light GBM is popular is because it focuses on accuracy of results. LGBM also supports GPU learning and thus<br> data scientists are widely using LGBM for data science application development.
+
+**Evaluation**
 
 Compute the evaluation metric on the validation data. Do a sum for all the transactions of the user and then do a log transformation on top.Make the values less than 0 to 0 as transaction revenue can only be 0 or more.
 ```
-print(np.sqrt(metrics.mean_squared_error(np.log1p(val_pred_df["transactionRevenue"].values), np.log1p(val_pred_df["PredictedRevenue"].values))))
+print(np.sqrt(metrics.mean_squared_error(np.log1p(pred_df_val["transactionRevenue"].values), np.log1p(pred_df_val["PredictedRevenue"].values))))
 ```
+**Parameter tuning**
+
+There are many parameters that can be tuned in light GBM and LightGBM is a relatively new algorithm and it doesn’t have a lot of reading<br> resources on the internet except its documentation. It becomes difficult for a beginner to choose parameters from the long list given in the documentation. Even I reffered to some good kernals to tune the parameters, and obtain the result of 1.73 in Kaggle public score board.
+
 **Submit the file**
-```
-submit = pd.DataFrame({"fullVisitorId":id})
-pred_test[pred_test<0] = 0
-submit["PredictedLogRevenue"] = np.expm1(pred_test)
-submit = submit.groupby("fullVisitorId")["PredictedLogRevenue"].sum().reset_index()
-submit.columns = ["fullVisitorId", "PredictedLogRevenue"]
-submit["PredictedLogRevenue"] = np.log1p(submit["PredictedLogRevenue"])
-submit.to_csv("D:\\Sub_file.csv", index=False)
-```
+Convert the transaction revenue column to PredictedLogRevenue by taking expm1 on a predicted test and then grouping by fullVisitorId and finally apply log1p on PredictedLogRevenue and convert to csv and submit.
 
 
