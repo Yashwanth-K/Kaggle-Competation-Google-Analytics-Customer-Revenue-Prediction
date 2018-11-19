@@ -1,6 +1,6 @@
 # Kaggle-Competation-Google-Analytics-Customer-Revenue-Prediction
 
-**Install**
+**Install**<br>
 This project requires Python and the following Python libraries installed:
 
 NumPy<br>
@@ -25,7 +25,7 @@ In this kaggle competition,we are challenged to analyze a Google Merchandise Sto
 
 **Data Mining**
 
-The data is shared in big query and csv format. The csv files contains some filed with json objects.We need to convert them and explore the revised dataset.<br>
+The data is shared in big query and csv format. The csv files contains some columns filled with json objects.We need to convert them and explore the revised dataset.<br>
 For converting the JSON column we need to import:
 ```
 from pandas.io.json import json_normalize
@@ -34,9 +34,9 @@ There are actually 4 JSON columns device,geoNetwork,totals,trafficSource that we
 
 **Target Variable Exploration:**
 
-Since we are predicting the natural log of sum of all transactions of the user, sum up the transaction revenue at user level and take a log and then do a scatter plot.<br>
+Since we are predicting the natural log of sum of all transactions of the user, summing up the transaction revenue at user level and take a log and then do a scatter plot.<br>
 From this above exploration it confirms the first two lines of the competition overview.<br>
-We get,
+And we get,
 ```
 the ratio of revenue generating customers are 1.219%
 ```
@@ -56,7 +56,7 @@ Compute the number of missing values and determine how to handle them. We can re
 **Seperate categorical columns and numerical columns from train set**<br>
 
 Investigate Categorical Columns<br>
-We need to convert all the columns as numeric columns (int or float data type), and containing no missing values. We just dealt with the missing values, now find out the number of columns that are of the object data type and then move on to process them into numeric form.
+We need to convert all the columns as numeric columns (int or float data type), and containing no missing values. We just dealt with the missing values above, now find out the number of columns that are of the object data type and then move on to process them into numeric form.
 
 We need to handle missing values and categorical features before feeding the data into a machine learning algorithm, because the mathematics underlying most machine learning models assumes that the data is numerical and contains no missing values. To reinforce this requirement, scikit-learn will return an error if you try to train a model using data that contain missing values or non-numeric values when working with models like linear regression and logistic regression.
 
@@ -71,13 +71,13 @@ Run light gbm model to train the model
 
 <font color=green>Light GBM is a gradient boosting framework that uses tree based learning algorithm.</font>
 ```
-Light GBM grows tree vertically while other algorithm grows trees horizontally meaning that Light GBM grows tree leaf-wise while other algorithm grows level-wise. It will choose the leaf with max delta loss to grow. When growing the same leaf, Leaf-wise algorithm can reduce more loss than a level-wise algorithm.
+Light GBM grows tree vertically while other algorithm grows trees horizontally meaning that Light GBM grows tree leaf-wise while other<br> algorithm grows level-wise. It will choose the leaf with max delta loss to grow. When growing the same leaf, Leaf-wise algorithm can reduce more loss than a level-wise algorithm.
 ```
-Light GBM is prefixed as ‘Light’ because of its high speed. Light GBM can handle the large size of data and takes lower memory to run.<br> Another reason of why Light GBM is popular is because it focuses on accuracy of results. LGBM also supports GPU learning and thus<br> data scientists are widely using LGBM for data science application development.
+Light GBM is prefixed as ‘Light’ because of its high speed. Light GBM can handle the large size of data and takes lower memory to run. Another reason of why Light GBM is popular is because it focuses on accuracy of results. LGBM also supports GPU learning and thus data scientists are widely using LGBM for data science application development.
 
 **Evaluation**
 
-Compute the evaluation metric on the validation data. Do a sum for all the transactions of the user and then do a log transformation on top.Make the values less than 0 to 0 as transaction revenue can only be 0 or more.
+Compute the evaluation metric on the validation data. Do a sum for all the transactions of the user and then take a log transformation on top.Make the values less than 0 to 0 as transaction revenue can only be 0 or more.
 ```
 print(np.sqrt(metrics.mean_squared_error(np.log1p(pred_df_val["transactionRevenue"].values), np.log1p(pred_df_val["PredictedRevenue"].values))))
 ```
