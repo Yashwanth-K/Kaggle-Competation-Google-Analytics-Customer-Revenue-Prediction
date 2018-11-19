@@ -16,13 +16,13 @@ In this kaggle competition,we are challenged to analyze a Google Merchandise Sto
 The data is shared in big query and csv format. The csv files contains some filed with json objects.We need to convert them and explore the revised dataset.
 
 ```
-def load_df(csv_path='../input/train.csv'):
+def loading_data_sets(csv_path='../input/train.csv'):
     JSON_COLUMNS = ['device', 'geoNetwork', 'totals', 'trafficSource']
     load_dataframe = pd.DataFrame()
     reading_csvfile = pd.read_csv(csv_path, sep=',',
                      converters={column: json.loads for column in JSON_COLUMNS}, 
                      dtype={'fullVisitorId': 'str'},
-                    chunksize = 100000)
+                    chunksize = chunk)
 ```
 **Target Variable Exploration:**
 
@@ -37,13 +37,13 @@ From this above exploration it confirms the first two lines of the competition o
 ```
 nonzero_instance = pd.notnull(train_df["totals.transactionRevenue"]).sum()
 nonzero_uniq = (groupdf["totals.transactionRevenue"]>0).sum()
-print("Number of instances in train set with non-zero revenue : ", nonzero_instance, " and ratio is : ", nonzero_instance / train_df.shape[0])
-print("Number of unique customers with revenue greater than 0. : ", nonzero_uniq, "and the ratio is : ", nonzero_uniq / groupdf.shape[0])
+print("No. of instances in train set with non-zero revenue : ", nonzero_instance, " and ratio is : ", nonzero_instance / train_df.shape[0])
+print("No. of unique customers with revenue greater than 0 : ", nonzero_uniq, "and the ratio is : ", nonzero_uniq / groupdf.shape[0])
 ```
 
 ```
-Number of instances in train set with non-zero revenue :  18514  and ratio is :  0.010837440153786987
-Number of unique customers with revenue greater than 0. :  16141 and the ratio is :  0.012193574218307359
+No. of instances in train set with non-zero revenue :  18514  and ratio is :  0.010837440153786987
+No. of unique customers with revenue greater than 0 :  16141 and the ratio is :  0.012193574218307359
 ```
 
 So the ratio of revenue generating customers to customers with no revenue is in the ratio of 1.219%
@@ -106,17 +106,17 @@ We have data from Aug 1st 2016 to April 30th 2018 in our training dataset.<br>
 
 **Seperate categorical columns and numerical columns from train set**
 
-```categorical_cols = list()
+```category_cols = list()
 for i in train_df.columns:
     if train_df[i].dtype=='object' and (not(i.startswith('total'))):
-        categorical_cols.append(i)
-categorical_cols
+        category_cols.append(i)
+category_cols
 
-numerical_cols = list()
+numeric_cols = list()
 for i in train_df.columns:
     if train_df[i].dtype not in ['object', 'bool']:
-        numerical_cols.append(i)
-numerical_cols
+        numeric_cols.append(i)
+numeric_cols
 ```
 **Find the missing values in the columns**
 
@@ -164,9 +164,9 @@ train_Y = dev_df['totals.transactionRevenue']
 **Run light gbm model to train the model**
 
 ```
-lgtrain = lgb.Dataset(train_X, label=train_Y,categorical_feature=categorical_cols)
-lgvalid = lgb.Dataset(val_X, label=val_Y,categorical_feature=categorical_cols)
-lgbmodel = lgb.train(params, lgtrain, 2000, valid_sets=[lgvalid], early_stopping_rounds=100, verbose_eval=100)
+LGBM_train = lgb.Dataset(train_X, label=train_Y,categorical_feature=category_cols)
+LGBM_valid = lgb.Dataset(val_X, label=val_Y,categorical_feature=category_cols)
+LGBM_model = lgb.train(params, LGBM_train, 2000, valid_sets=[LGBM_valid], early_stopping_rounds=100, verbose_eval=100)
 ```
 
 Compute the evaluation metric on the validation data. Do a sum for all the transactions of the user and then do a log transformation on top.Make the values less than 0 to 0 as transaction revenue can only be 0 or more.
