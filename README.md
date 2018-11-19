@@ -85,7 +85,7 @@ print(np.sqrt(metrics.mean_squared_error(np.log1p(pred_df_val["transactionRevenu
 
 There are many parameters that can be tuned in light GBM and LightGBM is a relatively new algorithm and it doesn’t have a lot of reading<br> resources on the internet except its documentation. It becomes difficult for a beginner to choose parameters from the long list given in the documentation. Even I reffered to some good kernals to tune the parameters, and obtain the result of 1.73 in Kaggle public score board.
 
-**Submit the file**
+**Submission file**
 Convert the transaction revenue column to PredictedLogRevenue by taking expm1 on a predicted test and then grouping by fullVisitorId and finally apply log1p on PredictedLogRevenue and convert to csv and submit.
 
 
