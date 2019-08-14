@@ -1,6 +1,6 @@
 # Kaggle-Competation-Google-Analytics-Customer-Revenue-Prediction
 
-**Install**<br>
+**Libraries to be installed**<br>
 This project requires Python and the following Python libraries installed:
 
 NumPy<br>
@@ -16,6 +16,10 @@ If you do not have Python installed yet, it is highly recommended that you insta
 The 80/20 rule has proven true for many businesses–only a small percentage of customers produce most of the revenue. As such, marketing teams are challenged to make appropriate investments in promotional strategies.
 
 In this kaggle competition,we are challenged to analyze a Google Merchandise Store (also known as GStore, where Google swag is sold) customer dataset to predict revenue per customer.
+
+**Dataset link**<br>
+
+https://www.kaggle.com/c/ga-customer-revenue-prediction/data
 
 **File Descriptions**
 
